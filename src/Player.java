@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
@@ -7,15 +6,17 @@ import java.io.InputStreamReader;
  */
 public class Player {
 
-    public static final int Y_axis = 0;
-    public static final int X_axis = 1;
+    // 配列のインデックス。Playerクラスでのみ使用する
+    private static int Y_axis = 0;
+    private static int X_axis = 1;
 
-    // プレイヤー名
+    // ボード設計の定数
+    int boardHeight = EnumBoard.ticTacToeBoard_Height.getLength();
+    int boardWidth = EnumBoard.ticTacToeBoard_Width.getLength();
+    int boardMin = EnumBoard.ticTacToeBoard_Min.getLength();
+
     String name_;
-    // マルかバツか
     String Marubatu_;
-
-    Board board_;
 
     /**
      * プレイヤーのコンストラクタ。
@@ -30,18 +31,18 @@ public class Player {
 
     /**
      * プレイする。
+     *
+     * @param board ボード
      */
     public void play(Board board){
 
+        // ナビゲーション
         System.out.println(this.name_ + "が" + Marubatu_ + "でプレイします");
 
-        // 盤面を描画する
         board.renderBoard();
 
-        // プレイヤーに置く場所を入力してもらう
         int putPos[] = AskPutPosition(board);
 
-        // 駒を置く
         board.putPiece(putPos[X_axis],putPos[Y_axis],this.Marubatu_);
         System.out.println(this.name_ + "が、X軸：" + putPos[X_axis] + ",Y軸：" + putPos[Y_axis] + "に置きました");
 
@@ -51,10 +52,10 @@ public class Player {
         }
     }
 
-
     /**
      * プレイヤーに駒を置く場所を入力してもらう
      *
+     * @param board ボード
      * @return putPosition 多次元配列の番号
      */
     public int[] AskPutPosition(Board board){
@@ -81,8 +82,9 @@ public class Player {
                 posY = Integer.parseInt(line2);
 
                 // 範囲外の数値が入力された場合はやり直し
-                if(posX < board_.ticTacToeBoardMin || posY < board_.ticTacToeBoardMin || posX >= board_.ticTacToeBoardWidth || posY >= board_.ticTacToeBoardHeight){
+                if(posX < boardMin || posY < boardMin || posX >= boardWidth || posY >= boardHeight){
                     System.out.println("入力値が不正です。盤面の範囲まで入力できます");
+                    // 既に置いてある場合もやり直し
                 } else if(!board.canPutPiece(posX, posY)) {
                     System.out.println("既に駒が置かれています。もう一度入力してください。");
                     board.renderBoard();
@@ -93,7 +95,8 @@ public class Player {
                 System.out.println("入力値が不正です");
             }
         }
-        putPos[Y_axis] = posY; // Y軸を先に代入する
+        // 二次元配列[Y軸][X軸]で代入する
+        putPos[Y_axis] = posY;
         putPos[X_axis] = posX;
         return putPos;
     }

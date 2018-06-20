@@ -2,21 +2,32 @@ import java.util.ArrayList;
 
 public class Board {
 
-    public static final String Maru = "○";
-    public static final String Batu = "×";
-    public static final String None = "  ";
-    public static final String Out = "Out";
+    /**
+     * 持ち駒(Piece)の定数
+     */
+    String Maru = EnumPiece.Maru.getName();
+    String Batu = EnumPiece.Batu.getName();
+    String None = EnumPiece.None.getName();
+    String Out = EnumPiece.Out.getName();
 
+    /**
+     * ボード設計の定数
+     */
+    int boardHeight = EnumBoard.ticTacToeBoard_Height.getLength();
+    int boardWidth = EnumBoard.ticTacToeBoard_Width.getLength();
+    int boardMin = EnumBoard.ticTacToeBoard_Min.getLength();
 
-    public static final int ticTacToeBoardHeight = 3;
-    public static final int ticTacToeBoardWidth = 3;
-    public static final int ticTacToeBoardMin = 0;
+    /**
+     * ルール設計の定数
+     */
+    int judgeVictoryNum_Upper = EnumRule.ticTacToeJudgeVictoryNum_Upper.getNum();
+    int judgeVictoryNum_Lower = EnumRule.ticTacToeJudgeVictoryNum_Lower.getNum();
 
-    public static final int ticTacToeJudgeVictoryNumUpper = 2;
-    public static final int ticTacToeJudgeVictoryNumLower = -2;
-
+    /** プレイヤーを格納する */
     ArrayList<Player> players_ = new ArrayList<>();
-    String[][] board_ = new String[ticTacToeBoardHeight][ticTacToeBoardWidth];
+
+    /** ボードを用意する */
+    String[][] board_ = new String[boardHeight][boardWidth];
 
     /**
      * ボードのコンストラクタ。
@@ -33,7 +44,6 @@ public class Board {
      */
     public void putPiece(int x, int y, String MaruBatu) {
         board_[y][x] = MaruBatu;
-        System.out.println(board_[y][x]);
     }
 
     /**
@@ -60,7 +70,7 @@ public class Board {
      * @return MaruBatu
      */
     public String judgePieceType(int x, int y){
-        if(x < ticTacToeBoardMin || y < ticTacToeBoardMin || x >= ticTacToeBoardWidth || y >= ticTacToeBoardHeight){
+        if(x < boardMin || y < boardMin || x >= boardWidth || y >= boardHeight){
             return Out;
         }
         String MaruBatu = board_[y][x];
@@ -75,17 +85,17 @@ public class Board {
 
         System.out.println("     0    1    2    ");
         System.out.print("0 ");
-        for(int i = 0; i < ticTacToeBoardWidth; i++){
+        for(int i = 0; i < boardWidth; i++){
             System.out.print(" | " + board_[0][i]);
         }
         System.out.println(" | ");
         System.out.print("1 ");
-        for(int i = 0; i < ticTacToeBoardWidth; i++){
+        for(int i = 0; i < boardWidth; i++){
             System.out.print(" | " + board_[1][i]);
         }
         System.out.println(" | ");
         System.out.print("2 ");
-        for(int i = 0; i < ticTacToeBoardWidth; i++){
+        for(int i = 0; i < boardWidth; i++){
             System.out.print(" | " + board_[2][i]);
         }
         System.out.println(" | ");
@@ -99,48 +109,45 @@ public class Board {
      * @param y
      * @return 勝利条件を満たすならtrueを返す
      */
-
     public boolean judgePieceCount(int x, int y, String MaruBatu, Board board) { // yとxを逆に受け取っている。わかりにくい。
+
         boolean result = false;
-        int MaruBatuCount_Vertical = 0;
-        int MaruBatuCount_Horizon = 0;
-        int MaruBatuCount_SlightRight = 0;
-        int MaruBatuCount_SlightLeft = 0;
 
+        // 全方位分のカウントストック
+        int maruBatuCount_vertical = 0;
+        int maruBatuCount_horizon = 0;
+        int maruBatuCount_slightRight = 0;
+        int maruBatuCount_slightLeft = 0;
 
-        for (int i = ticTacToeJudgeVictoryNumLower; i < ticTacToeJudgeVictoryNumUpper; i++) {
+        for (int i = judgeVictoryNum_Lower; i < judgeVictoryNum_Upper; i++) {
             // 上下を検索する
             if (board.judgePieceType(x, y + i) == MaruBatu) {
-                MaruBatuCount_Vertical++;
-//                System.out.println("現在の縦ラインのカウント：" + MaruBatuCount_Vertical);
-                if (MaruBatuCount_Vertical >= 3) {
+                maruBatuCount_vertical++;
+                if (maruBatuCount_vertical >= 3) {
                     result = true;
                     break;
                 }
             }
             // 左右を検索する
             if (board.judgePieceType(x + i, y) == MaruBatu) {
-                MaruBatuCount_Horizon++;
-//                System.out.println("現在の横ラインのカウント：" + MaruBatuCount_Horizon);
-                if (MaruBatuCount_Horizon >= 3) {
+                maruBatuCount_horizon++;
+                if (maruBatuCount_horizon >= 3) {
                     result = true;
                     break;
                 }
             }
             // 斜め右を検索する
             if (board.judgePieceType(x + i, y - i) == MaruBatu) {
-                MaruBatuCount_SlightRight++;
-//                System.out.println("現在の斜め右ラインのカウント：" + MaruBatuCount_SlightRight);
-                if (MaruBatuCount_SlightRight >= 3) {
+                maruBatuCount_slightRight++;
+                if (maruBatuCount_slightRight >= 3) {
                     result = true;
                     break;
                 }
             }
             // 斜め左を検索する
             if (board.judgePieceType(x + i, y + i) == MaruBatu) {
-                MaruBatuCount_SlightLeft++;
-//                System.out.println("現在の斜め左ラインのカウント：" + MaruBatuCount_SlightLeft);
-                if (MaruBatuCount_SlightLeft >= 3) {
+                maruBatuCount_slightLeft++;
+                if (maruBatuCount_slightLeft >= 3) {
                     result = true;
                     break;
                 }
@@ -156,11 +163,10 @@ public class Board {
      * @param board 最終結果を表示するボード
      */
     public void declareWin(Player player, Board board){
-        System.out.println(player.name_ + "の勝利です！");
-        players_.remove(0); // currentPlayerを除去する
         board.renderBoard();
+        System.out.println(player.name_ + "の勝利です！");
+        players_.remove(0); // currentPlayer = 0 を除去する
     }
-
 
     /**
      * プレイヤーを登録する。
@@ -176,14 +182,11 @@ public class Board {
     /**
      * ゲームを準備する。（盤面を初期化する）
      */
-
     public void prepareGame(){
         // 盤面を初期化する
-        for(int a = 0; a < ticTacToeBoardHeight; a++){
-            for(int b = 0; b < ticTacToeBoardWidth; b++){
+        for(int a = 0; a < boardHeight; a++){
+            for(int b = 0; b < boardWidth; b++){
                 board_[a][b] = None; // すべてNoneで初期化する
-//                board_[a][b] = Maru; // すべてMaruで初期化する
-//                board_[a][b] = Batu; // すべてBatuで初期化する
             }
         }
     }
@@ -195,20 +198,11 @@ public class Board {
         int numberOfPlayer = players_.size();
         for(int count = 0; 1 < players_.size(); count++){
             int currentPlayerNumber = count % numberOfPlayer; // 0 // 1 // 0
-//            int nextPlayerNumber = (count + 1) % numberOfPlayer; // 1 // 0 // 1
-
-//            Player nextPlayer = players_.get(nextPlayerNumber);
+        //  nextPlayerを使用する場合は以下を使う
+        //  int nextPlayerNumber = (count + 1) % numberOfPlayer; // 1 // 0 // 1
+        //  Player nextPlayer = players_.get(nextPlayerNumber);
             Player currentPlayer = players_.get(currentPlayerNumber);
-
             currentPlayer.play(board);
         }
-    }
-
-    /**
-     * ボードを文字列で表現する
-     */
-    @Override
-    public String toString() {
-        return "まる";
     }
 }
