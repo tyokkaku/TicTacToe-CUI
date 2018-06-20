@@ -39,22 +39,15 @@ public class Player {
         board.renderBoard();
 
         // プレイヤーに置く場所を入力してもらう
-        int putPos[] = AskPutPosition();
+        int putPos[] = AskPutPosition(board);
 
-        if(!board.canPutPiece(putPos[X_axis], putPos[Y_axis])){
-            System.out.print("既に駒が置かれています");
-            AskPutPosition();
-        } else {
-            // 駒を置く
-            board.putPiece(putPos[X_axis],putPos[Y_axis],this.Marubatu_);
-            System.out.println(this.name_ + "が、X軸：" + putPos[X_axis] + ",Y軸：" + putPos[Y_axis] + "に置きました");
+        // 駒を置く
+        board.putPiece(putPos[X_axis],putPos[Y_axis],this.Marubatu_);
+        System.out.println(this.name_ + "が、X軸：" + putPos[X_axis] + ",Y軸：" + putPos[Y_axis] + "に置きました");
 
-            if(board.judgeVictory(putPos[X_axis], putPos[Y_axis], this.Marubatu_, board)){
-                System.out.println("勝利です");
-                return;
-            };
-
-//            board.decreaWin(this);
+        if(board.judgePieceCount(putPos[X_axis], putPos[Y_axis], this.Marubatu_, board)){
+            board.declareWin(this, board);
+            return;
         }
     }
 
@@ -64,7 +57,7 @@ public class Player {
      *
      * @return putPosition 多次元配列の番号
      */
-    public int[] AskPutPosition(){
+    public int[] AskPutPosition(Board board){
         // 入力された数値を格納する配列
         int putPos[] = new int[2];
 
@@ -87,12 +80,16 @@ public class Player {
                 String line2 = reader.readLine();
                 posY = Integer.parseInt(line2);
 
-                if(posX < board_.ticTacToeBoardMin || posY < board_.ticTacToeBoardMin || posX > board_.ticTacToeBoardWidth || posY > board_.ticTacToeBoardHeight){
-                    System.out.print("入力値が不正です。盤面の範囲まで入力できます");
+                // 範囲外の数値が入力された場合はやり直し
+                if(posX < board_.ticTacToeBoardMin || posY < board_.ticTacToeBoardMin || posX >= board_.ticTacToeBoardWidth || posY >= board_.ticTacToeBoardHeight){
+                    System.out.println("入力値が不正です。盤面の範囲まで入力できます");
+                } else if(!board.canPutPiece(posX, posY)) {
+                    System.out.println("既に駒が置かれています。もう一度入力してください。");
+                    board.renderBoard();
                 } else {
                     break;
                 }
-            } catch(IOException e) {
+            } catch(Exception e) {
                 System.out.println("入力値が不正です");
             }
         }

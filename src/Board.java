@@ -34,7 +34,6 @@ public class Board {
     public void putPiece(int x, int y, String MaruBatu) {
         board_[y][x] = MaruBatu;
         System.out.println(board_[y][x]);
-        renderBoard();
     }
 
     /**
@@ -73,18 +72,24 @@ public class Board {
      */
     public void renderBoard() {
         // ボードを描画する
+
+        System.out.println("     0    1    2    ");
+        System.out.print("0 ");
         for(int i = 0; i < ticTacToeBoardWidth; i++){
             System.out.print(" | " + board_[0][i]);
         }
         System.out.println(" | ");
+        System.out.print("1 ");
         for(int i = 0; i < ticTacToeBoardWidth; i++){
             System.out.print(" | " + board_[1][i]);
         }
         System.out.println(" | ");
+        System.out.print("2 ");
         for(int i = 0; i < ticTacToeBoardWidth; i++){
             System.out.print(" | " + board_[2][i]);
         }
         System.out.println(" | ");
+        System.out.println("                    ");
     }
 
     /**
@@ -95,7 +100,7 @@ public class Board {
      * @return 勝利条件を満たすならtrueを返す
      */
 
-    public boolean judgeVictory(int x, int y, String MaruBatu, Board board) { // yとxを逆に受け取っている。わかりにくい。
+    public boolean judgePieceCount(int x, int y, String MaruBatu, Board board) { // yとxを逆に受け取っている。わかりにくい。
         boolean result = false;
         int MaruBatuCount_Vertical = 0;
         int MaruBatuCount_Horizon = 0;
@@ -144,6 +149,18 @@ public class Board {
         return result;
     }
 
+    /**
+     * 勝利を宣言する。
+     *
+     * @param player 勝利宣言したプレイヤー
+     * @param board 最終結果を表示するボード
+     */
+    public void declareWin(Player player, Board board){
+        System.out.println(player.name_ + "の勝利です！");
+        players_.remove(0); // currentPlayerを除去する
+        board.renderBoard();
+    }
+
 
     /**
      * プレイヤーを登録する。
@@ -176,7 +193,7 @@ public class Board {
      */
     public void startGame(Board board){
         int numberOfPlayer = players_.size();
-        for(int count = 0; count < 10; count++){
+        for(int count = 0; 1 < players_.size(); count++){
             int currentPlayerNumber = count % numberOfPlayer; // 0 // 1 // 0
 //            int nextPlayerNumber = (count + 1) % numberOfPlayer; // 1 // 0 // 1
 
