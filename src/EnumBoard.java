@@ -1,4 +1,9 @@
+/**
+ * ボード設計の定数
+ */
+
 public enum EnumBoard {
+    // ボードの枠組み
     ticTacToeBoard_Height(3),
     ticTacToeBoard_Width(3),
     ticTacToeBoard_Min(0);
@@ -9,7 +14,7 @@ public enum EnumBoard {
         return this.length;
     }
 
-    private EnumBoard(int length) {
+    EnumBoard(int length) {
         this.length = length;
     }
 }

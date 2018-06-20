@@ -1,3 +1,6 @@
+/**
+ * 三目並べ
+ */
 public class TicTacToe {
     public static void main(String[] args){
 

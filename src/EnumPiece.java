@@ -1,3 +1,6 @@
+/**
+ * 駒の定数
+ */
 public enum EnumPiece {
     Maru("○"),
     Batu("×"),
@@ -10,7 +13,7 @@ public enum EnumPiece {
         return this.name;
     }
 
-    private EnumPiece(String name) {
+    EnumPiece(String name) {
         this.name = name;
     }
 }

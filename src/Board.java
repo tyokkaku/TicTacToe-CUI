@@ -5,8 +5,6 @@ public class Board {
     /**
      * 持ち駒(Piece)の定数
      */
-    String Maru = EnumPiece.Maru.getName();
-    String Batu = EnumPiece.Batu.getName();
     String None = EnumPiece.None.getName();
     String Out = EnumPiece.Out.getName();
 
@@ -24,10 +22,10 @@ public class Board {
     int judgeVictoryNum_Lower = EnumRule.ticTacToeJudgeVictoryNum_Lower.getNum();
 
     /** プレイヤーを格納する */
-    ArrayList<Player> players_ = new ArrayList<>();
+    private ArrayList<Player> players_ = new ArrayList<>();
 
     /** ボードを用意する */
-    String[][] board_ = new String[boardHeight][boardWidth];
+    private String[][] board_ = new String[boardHeight][boardWidth];
 
     /**
      * ボードのコンストラクタ。
@@ -42,7 +40,7 @@ public class Board {
      * @param y
      * @param MaruBatu
      */
-    public void putPiece(int x, int y, String MaruBatu) {
+    void putPiece(int x, int y, String MaruBatu) {
         board_[y][x] = MaruBatu;
     }
 
@@ -52,14 +50,8 @@ public class Board {
      * @param x
      * @param y
      */
-    public boolean canPutPiece(int x, int y) {
-        boolean result;
-        if(board_[y][x] == None){
-            result = true;
-        } else {
-            result = false;
-        }
-        return result;
+    boolean canPutPiece(int x, int y) {
+        return (board_[y][x].equals(None));
     }
 
     /**
@@ -69,18 +61,17 @@ public class Board {
      * @param y y軸の値
      * @return MaruBatu
      */
-    public String judgePieceType(int x, int y){
+    String judgePieceType(int x, int y){
         if(x < boardMin || y < boardMin || x >= boardWidth || y >= boardHeight){
             return Out;
         }
-        String MaruBatu = board_[y][x];
-        return MaruBatu;
+        return board_[y][x];
     }
 
     /**
      * ボードを描画する
      */
-    public void renderBoard() {
+    void renderBoard() {
         // ボードを描画する
 
         System.out.println("     0    1    2    ");
@@ -105,11 +96,11 @@ public class Board {
     /**
      * 置いた駒の上下左右斜めを検索して駒をカウントする
      *
-     * @param x
-     * @param y
+     * @param x x軸の値
+     * @param y y軸の値
      * @return 勝利条件を満たすならtrueを返す
      */
-    public boolean judgePieceCount(int x, int y, String MaruBatu, Board board) { // yとxを逆に受け取っている。わかりにくい。
+    boolean judgePieceCount(int x, int y, String MaruBatu, Board board) { // yとxを逆に受け取っている。わかりにくい。
 
         boolean result = false;
 
@@ -121,7 +112,7 @@ public class Board {
 
         for (int i = judgeVictoryNum_Lower; i < judgeVictoryNum_Upper; i++) {
             // 上下を検索する
-            if (board.judgePieceType(x, y + i) == MaruBatu) {
+            if (board.judgePieceType(x, y + i).equals(MaruBatu)) {
                 maruBatuCount_vertical++;
                 if (maruBatuCount_vertical >= 3) {
                     result = true;
@@ -129,7 +120,7 @@ public class Board {
                 }
             }
             // 左右を検索する
-            if (board.judgePieceType(x + i, y) == MaruBatu) {
+            if (board.judgePieceType(x + i, y).equals(MaruBatu)) {
                 maruBatuCount_horizon++;
                 if (maruBatuCount_horizon >= 3) {
                     result = true;
@@ -137,7 +128,7 @@ public class Board {
                 }
             }
             // 斜め右を検索する
-            if (board.judgePieceType(x + i, y - i) == MaruBatu) {
+            if (board.judgePieceType(x + i, y - i).equals(MaruBatu)) {
                 maruBatuCount_slightRight++;
                 if (maruBatuCount_slightRight >= 3) {
                     result = true;
@@ -145,7 +136,7 @@ public class Board {
                 }
             }
             // 斜め左を検索する
-            if (board.judgePieceType(x + i, y + i) == MaruBatu) {
+            if (board.judgePieceType(x + i, y + i).equals(MaruBatu)) {
                 maruBatuCount_slightLeft++;
                 if (maruBatuCount_slightLeft >= 3) {
                     result = true;
@@ -162,7 +153,7 @@ public class Board {
      * @param player 勝利宣言したプレイヤー
      * @param board 最終結果を表示するボード
      */
-    public void declareWin(Player player, Board board){
+    void declareWin(Player player, Board board){
         board.renderBoard();
         System.out.println(player.name_ + "の勝利です！");
         players_.remove(0); // currentPlayer = 0 を除去する
@@ -171,10 +162,10 @@ public class Board {
     /**
      * プレイヤーを登録する。
      *
-     * @param player1
-     * @param player2
+     * @param player1 先手のプレイヤー
+     * @param player2 後手のプレイヤー
      */
-    public void registerPlayer(Player player1, Player player2){
+    void registerPlayer(Player player1, Player player2){
         players_.add(player1);
         players_.add(player2);
     }
@@ -182,7 +173,7 @@ public class Board {
     /**
      * ゲームを準備する。（盤面を初期化する）
      */
-    public void prepareGame(){
+    void prepareGame(){
         // 盤面を初期化する
         for(int a = 0; a < boardHeight; a++){
             for(int b = 0; b < boardWidth; b++){
@@ -194,7 +185,7 @@ public class Board {
     /**
      * ゲームを開始する。
      */
-    public void startGame(Board board){
+    void startGame(Board board){
         int numberOfPlayer = players_.size();
         for(int count = 0; 1 < players_.size(); count++){
             int currentPlayerNumber = count % numberOfPlayer; // 0 // 1 // 0

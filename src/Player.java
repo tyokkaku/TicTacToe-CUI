@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 /**
  * プレイヤーを表すクラス。
  */
-public class Player {
+class Player {
 
     // 配列のインデックス。Playerクラスでのみ使用する
     private static int Y_axis = 0;
@@ -16,7 +16,7 @@ public class Player {
     int boardMin = EnumBoard.ticTacToeBoard_Min.getLength();
 
     String name_;
-    String Marubatu_;
+    private String Marubatu_;
 
     /**
      * プレイヤーのコンストラクタ。
@@ -34,7 +34,7 @@ public class Player {
      *
      * @param board ボード
      */
-    public void play(Board board){
+    void play(Board board){
 
         // ナビゲーション
         System.out.println(this.name_ + "が" + Marubatu_ + "でプレイします");
@@ -48,7 +48,6 @@ public class Player {
 
         if(board.judgePieceCount(putPos[X_axis], putPos[Y_axis], this.Marubatu_, board)){
             board.declareWin(this, board);
-            return;
         }
     }
 
@@ -58,7 +57,7 @@ public class Player {
      * @param board ボード
      * @return putPosition 多次元配列の番号
      */
-    public int[] AskPutPosition(Board board){
+    private int[] AskPutPosition(Board board){
         // 入力された数値を格納する配列
         int putPos[] = new int[2];
 
