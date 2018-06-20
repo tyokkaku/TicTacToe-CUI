@@ -12,6 +12,8 @@ public class Player {
     // マルかバツか
     String Marubatu_;
 
+    Board board_;
+
     /**
      * プレイヤーのコンストラクタ。
      *
@@ -36,11 +38,23 @@ public class Player {
         // プレイヤーに置く場所を入力してもらう
         int putPos[] = AskPutPosition();
 
-        // 駒を置く
-        board.putPiece(putPos[0],putPos[1],this.Marubatu_);
+        if(!board.canPutPiece(putPos[0], putPos[1])){
+            System.out.print("既に駒が置かれています");
+            AskPutPosition();
+        } else {
 
-        System.out.println(this.name_ + "が" + putPos[0] + "," + putPos[1] + "に置きました");
+            // 駒を置く
+            board.putPiece(putPos[0],putPos[1],this.Marubatu_);
+            System.out.println(this.name_ + "が" + putPos[0] + "," + putPos[1] + "に置きました");
+
+            if(board.judgeVictory(putPos[0], putPos[1], this.Marubatu_, board)){
+                System.out.println("勝利です");
+                return;
+            };
+
+//            board.decreaWin(this);
         }
+    }
 
 
     /**
@@ -56,25 +70,32 @@ public class Player {
         int posY = 0;
 
         while(true){
-            // 入力を受け付ける
-            System.out.println("置く場所を入力してください");
-
-            InputStreamReader in = new InputStreamReader(System.in);
-            BufferedReader reader = new BufferedReader(in);
             try {
+                // 入力を受け付ける
+                System.out.println("置く場所を入力してください");
+
+                InputStreamReader in = new InputStreamReader(System.in);
+                BufferedReader reader = new BufferedReader(in);
+
                 System.out.print("X軸：");
-                String line = reader.readLine();
-                posX = Integer.parseInt(line);
+                String line1 = reader.readLine();
+                posX = Integer.parseInt(line1);
 
                 System.out.print("Y軸：");
                 String line2 = reader.readLine();
                 posY = Integer.parseInt(line2);
+
+                if(posX < board_.ticTacToeBoardMin || posY < board_.ticTacToeBoardMin || posX > board_.ticTacToeBoardWidth || posY > board_.ticTacToeBoardHeight){
+                    System.out.print("入力値が不正です。盤面の範囲まで入力できます");
+                } else {
+                    break;
+                }
             } catch(IOException e) {
                 System.out.println("入力値が不正です");
             }
-            putPos[0] = posX;
-            putPos[1] = posY;
-            return putPos;
         }
+        putPos[0] = posY; // Y軸を先に代入する
+        putPos[1] = posX;
+        return putPos;
     }
 }

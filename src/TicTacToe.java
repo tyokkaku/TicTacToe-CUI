@@ -11,6 +11,10 @@ public class TicTacToe {
         // プレイヤーの登録
         board.registerPlayer(Tyokkaku,Heikou);
 
+        // ゲームの準備
+        board.prepareGame();
+
+        // ゲーム開始
         board.startGame(board);
     }
 }
