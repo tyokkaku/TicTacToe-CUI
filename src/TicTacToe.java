@@ -16,6 +16,5 @@ public class TicTacToe {
 
         // ゲーム開始
         board.startGame(board);
-        aaa
     }
 }
