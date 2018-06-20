@@ -7,6 +7,9 @@ import java.io.InputStreamReader;
  */
 public class Player {
 
+    public static final int Y_axis = 0;
+    public static final int X_axis = 1;
+
     // プレイヤー名
     String name_;
     // マルかバツか
@@ -38,16 +41,15 @@ public class Player {
         // プレイヤーに置く場所を入力してもらう
         int putPos[] = AskPutPosition();
 
-        if(!board.canPutPiece(putPos[0], putPos[1])){
+        if(!board.canPutPiece(putPos[X_axis], putPos[Y_axis])){
             System.out.print("既に駒が置かれています");
             AskPutPosition();
         } else {
-
             // 駒を置く
-            board.putPiece(putPos[0],putPos[1],this.Marubatu_);
-            System.out.println(this.name_ + "が" + putPos[0] + "," + putPos[1] + "に置きました");
+            board.putPiece(putPos[X_axis],putPos[Y_axis],this.Marubatu_);
+            System.out.println(this.name_ + "が、X軸：" + putPos[X_axis] + ",Y軸：" + putPos[Y_axis] + "に置きました");
 
-            if(board.judgeVictory(putPos[0], putPos[1], this.Marubatu_, board)){
+            if(board.judgeVictory(putPos[X_axis], putPos[Y_axis], this.Marubatu_, board)){
                 System.out.println("勝利です");
                 return;
             };
@@ -66,8 +68,8 @@ public class Player {
         // 入力された数値を格納する配列
         int putPos[] = new int[2];
 
-        int posX = 0;
-        int posY = 0;
+        int posX;
+        int posY;
 
         while(true){
             try {
@@ -94,8 +96,8 @@ public class Player {
                 System.out.println("入力値が不正です");
             }
         }
-        putPos[0] = posY; // Y軸を先に代入する
-        putPos[1] = posX;
+        putPos[Y_axis] = posY; // Y軸を先に代入する
+        putPos[X_axis] = posX;
         return putPos;
     }
 }

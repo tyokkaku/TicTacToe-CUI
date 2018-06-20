@@ -7,6 +7,7 @@ public class Board {
     public static final String None = "  ";
     public static final String Out = "Out";
 
+
     public static final int ticTacToeBoardHeight = 3;
     public static final int ticTacToeBoardWidth = 3;
     public static final int ticTacToeBoardMin = 0;
@@ -31,8 +32,8 @@ public class Board {
      * @param MaruBatu
      */
     public void putPiece(int x, int y, String MaruBatu) {
-        board_[x][y] = MaruBatu;
-        System.out.println(board_[x][y]);
+        board_[y][x] = MaruBatu;
+        System.out.println(board_[y][x]);
         renderBoard();
     }
 
@@ -44,7 +45,7 @@ public class Board {
      */
     public boolean canPutPiece(int x, int y) {
         boolean result;
-        if(board_[x][y] == None){
+        if(board_[y][x] == None){
             result = true;
         } else {
             result = false;
@@ -63,7 +64,7 @@ public class Board {
         if(x < ticTacToeBoardMin || y < ticTacToeBoardMin || x >= ticTacToeBoardWidth || y >= ticTacToeBoardHeight){
             return Out;
         }
-        String MaruBatu = board_[x][y];
+        String MaruBatu = board_[y][x];
         return MaruBatu;
     }
 
@@ -94,20 +95,47 @@ public class Board {
      * @return 勝利条件を満たすならtrueを返す
      */
 
-    //    putPos[0] = posY; // Y軸を先に代入する
-//    putPos[1] = posX;
-
-    public boolean judgeVictory(int y, int x, String MaruBatu, Board board){ // yとxを逆に受け取っている。わかりにくい。
+    public boolean judgeVictory(int x, int y, String MaruBatu, Board board) { // yとxを逆に受け取っている。わかりにくい。
         boolean result = false;
-        int MaruBatuCount = 0;
-        for(int i = ticTacToeJudgeVictoryNumLower; i < ticTacToeJudgeVictoryNumUpper; i++){
+        int MaruBatuCount_Vertical = 0;
+        int MaruBatuCount_Horizon = 0;
+        int MaruBatuCount_SlightRight = 0;
+        int MaruBatuCount_SlightLeft = 0;
+
+
+        for (int i = ticTacToeJudgeVictoryNumLower; i < ticTacToeJudgeVictoryNumUpper; i++) {
             // 上下を検索する
-            if(board.judgePieceType(x, y + i) == MaruBatu){
-                System.out.println(x + "," + y + "地点に" + MaruBatu + "を検出しました。");
-                MaruBatuCount++;
-                System.out.println("カウントを1アップさせます。現在のカウント：" + MaruBatuCount);
-                if(MaruBatuCount >= 3){
-                    System.out.println("カウントが3以上になりました。trueを返します" + MaruBatuCount);
+            if (board.judgePieceType(x, y + i) == MaruBatu) {
+                MaruBatuCount_Vertical++;
+//                System.out.println("現在の縦ラインのカウント：" + MaruBatuCount_Vertical);
+                if (MaruBatuCount_Vertical >= 3) {
+                    result = true;
+                    break;
+                }
+            }
+            // 左右を検索する
+            if (board.judgePieceType(x + i, y) == MaruBatu) {
+                MaruBatuCount_Horizon++;
+//                System.out.println("現在の横ラインのカウント：" + MaruBatuCount_Horizon);
+                if (MaruBatuCount_Horizon >= 3) {
+                    result = true;
+                    break;
+                }
+            }
+            // 斜め右を検索する
+            if (board.judgePieceType(x + i, y - i) == MaruBatu) {
+                MaruBatuCount_SlightRight++;
+//                System.out.println("現在の斜め右ラインのカウント：" + MaruBatuCount_SlightRight);
+                if (MaruBatuCount_SlightRight >= 3) {
+                    result = true;
+                    break;
+                }
+            }
+            // 斜め左を検索する
+            if (board.judgePieceType(x + i, y + i) == MaruBatu) {
+                MaruBatuCount_SlightLeft++;
+//                System.out.println("現在の斜め左ラインのカウント：" + MaruBatuCount_SlightLeft);
+                if (MaruBatuCount_SlightLeft >= 3) {
                     result = true;
                     break;
                 }
@@ -115,7 +143,6 @@ public class Board {
         }
         return result;
     }
-
 
 
     /**
