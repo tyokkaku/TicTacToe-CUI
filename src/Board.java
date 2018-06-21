@@ -73,7 +73,6 @@ public class Board {
      */
     void renderBoard() {
         // ボードを描画する
-
         System.out.println("     0    1    2    ");
         System.out.print("0 ");
         for(int i = 0; i < boardWidth; i++){
@@ -156,7 +155,7 @@ public class Board {
     void declareWin(Player player, Board board){
         board.renderBoard();
         System.out.println(player.name_ + "の勝利です！");
-        players_.remove(0); // currentPlayer = 0 を除去する
+        players_.remove(players_.indexOf(player));
     }
 
     /**
@@ -188,12 +187,17 @@ public class Board {
     void startGame(Board board){
         int numberOfPlayer = players_.size();
         for(int count = 0; 1 < players_.size(); count++){
-            int currentPlayerNumber = count % numberOfPlayer; // 0 // 1 // 0
-        //  nextPlayerを使用する場合は以下を使う
-        //  int nextPlayerNumber = (count + 1) % numberOfPlayer; // 1 // 0 // 1
-        //  Player nextPlayer = players_.get(nextPlayerNumber);
-            Player currentPlayer = players_.get(currentPlayerNumber);
-            currentPlayer.play(board);
+                int currentPlayerNumber = count % numberOfPlayer; // 0 // 1 // 0
+                //  nextPlayerを使用する場合は以下を使う
+                //  int nextPlayerNumber = (count + 1) % numberOfPlayer; // 1 // 0 // 1
+                //  Player nextPlayer = players_.get(nextPlayerNumber);
+                Player currentPlayer = players_.get(currentPlayerNumber);
+                currentPlayer.play(board);
+                if(count == boardWidth * boardHeight - 1){
+                    board.renderBoard();
+                    System.out.println("引き分けです！");
+                    break;
+                }
         }
     }
 }
